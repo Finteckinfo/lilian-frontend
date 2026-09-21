@@ -1,0 +1,23 @@
+# Being Lillian Frontend — ignore rules
+
+# dependencies / build
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+
+# env & secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# runtime / misc
+data/
+*.log
+.DS_Store
+coverage/
+playwright-report/
+test-results/
