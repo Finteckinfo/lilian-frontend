@@ -67,20 +67,33 @@ function applyCssVars(s: SiteSettings) {
   const root = document.documentElement;
   const dark = root.classList.contains("dark");
 
-  const paper = dark ? "#161310" : s.paper_color;
-  const ink = dark ? "#F3EDE4" : s.ink_color;
-  const gold = dark ? liftForDark(s.accent_color) : s.accent_color;
+  // Keep the full token set in lockstep so chrome never gets light paper + light ink
+  const paper = dark ? "#161310" : s.paper_color || "#F7F4EF";
+  const ink = dark ? "#F3EDE4" : s.ink_color || "#2A2420";
+  const gold = dark ? liftForDark(s.accent_color || "#C9A88A") : s.accent_color || "#C9A88A";
+  const surface = dark ? "#221E19" : "#EFE8DE";
+  const elevated = dark ? "#2A251F" : "#FFFCF8";
+  const line = dark ? "#3A342C" : "#E2D9CE";
+  const muted = dark ? "#A3988C" : "#8A7F74";
 
   root.style.setProperty("--bl-accent", gold);
   root.style.setProperty("--bl-paper", paper);
   root.style.setProperty("--bl-ink", ink);
 
-  const paperCh = hexToRgbChannels(paper);
-  const inkCh = hexToRgbChannels(ink);
-  const goldCh = hexToRgbChannels(gold);
-  if (paperCh) root.style.setProperty("--color-paper", paperCh);
-  if (inkCh) root.style.setProperty("--color-ink", inkCh);
-  if (goldCh) root.style.setProperty("--color-gold", goldCh);
+  const pairs: [string, string][] = [
+    ["--color-paper", paper],
+    ["--color-ink", ink],
+    ["--color-gold", gold],
+    ["--color-surface", surface],
+    ["--color-elevated", elevated],
+    ["--color-line", line],
+    ["--color-muted", muted],
+    ["--color-on-media", "#F3EDE4"],
+  ];
+  for (const [key, hex] of pairs) {
+    const ch = hexToRgbChannels(hex);
+    if (ch) root.style.setProperty(key, ch);
+  }
 }
 
 export function SiteSettingsProvider({ children }: { children: React.ReactNode }) {
