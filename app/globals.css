@@ -1,0 +1,292 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Soft Luxe palette — color theory notes
+  Light: high-key warm analogous (ivory ↔ champagne ↔ umber) + coral complement
+  Dark: same hue family, lowered value / raised chroma so gold stays luminous
+*/
+
+:root {
+  color-scheme: light;
+
+  /* Brand overrides (admin appearance can set these) */
+  --bl-accent: #c9a88a;
+  --bl-paper: #f7f4ef;
+  --bl-ink: #2a2420;
+
+  /* Semantic channels (R G B) for Tailwind alpha */
+  --color-ink: 42 36 32;
+  --color-paper: 247 244 239;
+  --color-surface: 239 232 222;
+  --color-muted: 138 127 116;
+  --color-gold: 201 168 138;
+  --color-line: 226 217 206;
+  --color-accent: 196 92 62;
+  --color-journal: 33 20 17;
+  --color-elevated: 255 252 248;
+  --color-wash: 112 66 20;
+  --color-on-media: 243 237 228;
+
+  --shadow-soft: 0 18px 48px rgb(42 36 32 / 0.06);
+  --glow-gold: 0 0 0 1px rgb(201 168 138 / 0.28);
+}
+
+html.dark {
+  color-scheme: dark;
+
+  --bl-accent: #e0c4a8;
+  --bl-paper: #161310;
+  --bl-ink: #f3ede4;
+
+  --color-ink: 243 237 228;
+  --color-paper: 22 19 16;
+  --color-surface: 34 30 25;
+  --color-muted: 163 152 140;
+  --color-gold: 224 196 168;
+  --color-line: 58 52 44;
+  --color-accent: 224 120 92;
+  --color-journal: 243 237 228;
+  --color-elevated: 42 37 31;
+  --color-wash: 201 168 138;
+  --color-on-media: 243 237 228;
+
+  --shadow-soft: 0 22px 56px rgb(0 0 0 / 0.45);
+  --glow-gold: 0 0 0 1px rgb(224 196 168 / 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(var(--color-paper));
+  color: rgb(var(--color-ink));
+  font-family: Jost, sans-serif;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(
+      120% 80% at 50% -20%,
+      rgb(var(--color-gold) / 0.14),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(var(--color-paper)),
+      rgb(var(--color-surface) / 0.35) 48%,
+      rgb(var(--color-paper))
+    );
+  background-attachment: fixed;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+html.dark body {
+  background-image:
+    radial-gradient(
+      90% 60% at 80% 0%,
+      rgb(var(--color-gold) / 0.09),
+      transparent 50%
+    ),
+    radial-gradient(
+      70% 50% at 10% 100%,
+      rgb(var(--color-accent) / 0.06),
+      transparent 45%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(var(--color-paper)),
+      rgb(var(--color-surface) / 0.55) 50%,
+      rgb(var(--color-paper))
+    );
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: "Cormorant Garamond", serif;
+  color: rgb(var(--color-ink));
+}
+
+.font-journalDisplay {
+  font-family: "Playfair Display", serif;
+}
+
+.font-journalBody {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+::selection {
+  background: rgb(var(--color-gold) / 0.55);
+  color: rgb(var(--color-ink));
+}
+
+html.dark ::selection {
+  background: rgb(var(--color-gold) / 0.35);
+  color: rgb(var(--color-ink));
+}
+
+.btn-primary {
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-paper));
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  font-weight: 400;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--glow-gold);
+}
+
+html.dark .btn-primary {
+  background: rgb(var(--color-gold));
+  color: rgb(22 19 16);
+}
+
+.btn-primary:hover {
+  background: rgb(var(--color-gold));
+  color: rgb(42 36 32);
+}
+
+html.dark .btn-primary:hover {
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-paper));
+}
+
+.nav-link {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-link:hover {
+  color: rgb(var(--color-gold));
+  opacity: 1;
+}
+
+.sepia-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(var(--color-wash) / 0.18),
+    rgb(var(--color-paper) / 0.08) 40%,
+    rgb(var(--color-ink) / 0.35)
+  );
+  pointer-events: none;
+}
+
+html.dark .sepia-overlay::after {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--color-gold) / 0.12),
+    transparent 42%,
+    rgb(0 0 0 / 0.55)
+  );
+}
+
+.masonry {
+  column-count: 1;
+  column-gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .masonry {
+    column-count: 2;
+    column-gap: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry {
+    column-count: 3;
+    column-gap: 48px;
+  }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .masonry-item {
+    margin-bottom: 36px;
+  }
+}
+
+.portfolio-card {
+  box-shadow: var(--shadow-soft);
+}
+
+.portfolio-card img,
+.portfolio-card video {
+  filter: grayscale(0.85) sepia(0.12) contrast(0.96);
+  transition: filter 0.6s ease, transform 0.6s ease;
+}
+
+html.dark .portfolio-card img,
+html.dark .portfolio-card video {
+  filter: grayscale(0.7) sepia(0.18) brightness(0.92) contrast(1.02);
+}
+
+.portfolio-card:hover img,
+.portfolio-card:hover video,
+.portfolio-card:focus-visible img {
+  filter: grayscale(0) sepia(0.04) contrast(1);
+  transform: scale(1.03);
+}
+
+html.dark .portfolio-card:hover img,
+html.dark .portfolio-card:hover video,
+html.dark .portfolio-card:focus-visible img {
+  filter: grayscale(0) sepia(0.06) brightness(1.02);
+}
+
+@media (hover: none) {
+  .portfolio-card img,
+  .portfolio-card video {
+    filter: grayscale(0.25) sepia(0.08);
+  }
+}
+
+/* Option B journal — frosted warm glass */
+.glass-card {
+  background-color: rgb(var(--color-elevated) / 0.72);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgb(var(--color-line));
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+html.dark .glass-card {
+  background-color: rgb(var(--color-elevated) / 0.72);
+  border-color: rgb(var(--color-line));
+}
+
+.glass-card:hover {
+  border-color: rgb(var(--color-accent));
+  box-shadow: var(--shadow-soft), var(--glow-gold);
+}
+
+.journal-nav-item.active {
+  color: rgb(var(--color-accent));
+  border-left: 2px solid rgb(var(--color-accent));
+}
+
+/* Soft section rhythm helpers */
+.section-warm {
+  background: rgb(var(--color-surface) / 0.65);
+}
+
+html.dark .section-warm {
+  background: rgb(var(--color-surface) / 0.85);
+}
