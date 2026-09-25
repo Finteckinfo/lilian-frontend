@@ -67,7 +67,7 @@ export function SiteHeader({ transparentOnTop = false }: { transparentOnTop?: bo
       <header
         className={`site-header fixed top-0 z-50 w-full h-16 md:h-[96px] flex items-center justify-between px-4 md:px-16 transition-all duration-300 ${
           solid
-            ? "bg-[#F7F4EF]/95 dark:bg-[#161310]/95 border-b border-[#E2D9CE] dark:border-[#3A342C] backdrop-blur-md shadow-soft"
+            ? "bg-[#F7F4EF] dark:bg-[#161310]/95 border-b border-[#E2D9CE] dark:border-[#3A342C] dark:backdrop-blur-md shadow-soft"
             : "bg-transparent border-b border-transparent"
         }`}
       >

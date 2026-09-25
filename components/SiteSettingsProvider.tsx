@@ -26,7 +26,7 @@ const fallback: SiteSettings = {
   accent_color: "#C9A88A",
   paper_color: "#F7F4EF",
   ink_color: "#2A2420",
-  whatsapp_number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "0000000000",
+  whatsapp_number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "254794230220",
   instagram_url:
     process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
     "https://www.instagram.com/lilianbeauty_studio",
