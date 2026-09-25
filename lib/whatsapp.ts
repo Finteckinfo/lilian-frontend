@@ -14,7 +14,8 @@ export function whatsappUrl(
 ) {
   const base = PREFILLS[service];
   const text = extra ? `${base}\n\n${extra}` : base;
-  const number = (phone || WHATSAPP_NUMBER).replace(/\D/g, "") || WHATSAPP_NUMBER;
+  const raw = (phone || WHATSAPP_NUMBER).replace(/\D/g, "");
+  const number = !raw || raw === "0000000000" ? "254794230220" : raw;
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
 }
 

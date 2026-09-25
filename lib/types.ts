@@ -3,7 +3,7 @@ export const INSTAGRAM_URL =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL ??
   "https://www.instagram.com/lilianbeauty_studio";
 export const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "0000000000";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "254794230220";
 
 export type ServiceType = "MUA" | "Brand_Collab" | "Event" | "General";
 export type PostCategory =

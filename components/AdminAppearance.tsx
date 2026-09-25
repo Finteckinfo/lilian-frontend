@@ -27,7 +27,7 @@ const defaults: Settings = {
   accent_color: "#C9A88A",
   paper_color: "#F7F4EF",
   ink_color: "#2A2420",
-  whatsapp_number: "0000000000",
+  whatsapp_number: "254794230220",
   instagram_url: "https://www.instagram.com/lilianbeauty_studio",
   show_whatsapp_fab: true,
   show_journal: true,
