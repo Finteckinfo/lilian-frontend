@@ -1,20 +1,34 @@
 const LOCAL_API = "http://127.0.0.1:8000";
 const PRODUCTION_API = "https://lilian-backend-production-dd74.up.railway.app";
 
-const configured = (
-  process.env.NEXT_PUBLIC_API_URL || LOCAL_API
-).replace("localhost", "127.0.0.1").replace(/\/$/, "");
-
 const FETCH_MS = 8_000;
 
+function usableApi(raw: string | undefined): string | null {
+  const value = (raw || "").trim().replace(/\/$/, "");
+  if (!value || value.includes("<") || value.includes(">") || value.includes("your-railway-domain")) {
+    return null;
+  }
+  try {
+    const url = new URL(value.replace("localhost", "127.0.0.1"));
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
 function apiBase() {
-  if (typeof window === "undefined") return configured;
-  const host = window.location.hostname;
+  const fromEnv = usableApi(process.env.NEXT_PUBLIC_API_URL);
+  const host = typeof window !== "undefined" ? window.location.hostname : "";
   const onLocalhost = host === "localhost" || host === "127.0.0.1";
-  const pointsAtLocal =
-    configured.includes("127.0.0.1") || configured.includes("localhost");
-  if (!onLocalhost && pointsAtLocal) return PRODUCTION_API;
-  return configured;
+  if (host && !onLocalhost) {
+    if (fromEnv && !fromEnv.includes("127.0.0.1")) return fromEnv;
+    return PRODUCTION_API;
+  }
+  if (!host && process.env.NODE_ENV === "production") {
+    return fromEnv && !fromEnv.includes("127.0.0.1") ? fromEnv : PRODUCTION_API;
+  }
+  return fromEnv || LOCAL_API;
 }
 
 export function apiUrl(path: string) {
