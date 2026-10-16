@@ -1,11 +1,25 @@
-const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000"
-).replace("localhost", "127.0.0.1");
+const LOCAL_API = "http://127.0.0.1:8000";
+const PRODUCTION_API = "https://lilian-backend-production-dd74.up.railway.app";
+
+const configured = (
+  process.env.NEXT_PUBLIC_API_URL || LOCAL_API
+).replace("localhost", "127.0.0.1").replace(/\/$/, "");
 
 const FETCH_MS = 8_000;
 
+function apiBase() {
+  if (typeof window === "undefined") return configured;
+  const host = window.location.hostname;
+  const onLocalhost = host === "localhost" || host === "127.0.0.1";
+  const pointsAtLocal =
+    configured.includes("127.0.0.1") || configured.includes("localhost");
+  if (!onLocalhost && pointsAtLocal) return PRODUCTION_API;
+  return configured;
+}
+
 export function apiUrl(path: string) {
-  return `${API_URL.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
+  const base = apiBase();
+  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 function withTimeout(init?: RequestInit): RequestInit {
