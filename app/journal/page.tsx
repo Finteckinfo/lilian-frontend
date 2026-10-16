@@ -3,7 +3,11 @@ import { JournalList } from "@/components/JournalList";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getPosts } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Journal" };
+export const metadata: Metadata = {
+  title: "Journal",
+  description:
+    "Stories, reviews, and motivation from Being Lillian — the journal behind the artistry.",
+};
 
 export default async function JournalPage() {
   const posts = await getPosts();

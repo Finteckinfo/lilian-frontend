@@ -65,12 +65,13 @@ export default async function HomePage() {
                   >
                     Book MUA
                   </Link>
-                  <a
+                  <Link
+                    data-tour="catalog-link"
                     className="text-[12px] uppercase tracking-[1.5px] border-b border-ink pb-1 hover:text-muted hover:border-muted"
-                    href={whatsappUrl("MUA")}
+                    href="/catalog"
                   >
-                    WhatsApp
-                  </a>
+                    Catalog
+                  </Link>
                 </div>
               </div>
             </div>

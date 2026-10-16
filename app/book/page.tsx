@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { BookForm } from "@/components/BookForm";
 import { SiteHeader } from "@/components/SiteHeader";
 
-export const metadata: Metadata = { title: "Book" };
+export const metadata: Metadata = {
+  title: "Book",
+  description:
+    "Book makeup artistry, brand consulting, or event appearance services with Being Lillian. Submit your details and connect on WhatsApp.",
+};
 
 export default async function BookPage({
   searchParams,
