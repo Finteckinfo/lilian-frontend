@@ -3,7 +3,11 @@ import { GalleryGrid } from "@/components/GalleryGrid";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getPortfolio } from "@/lib/content";
 
-export const metadata: Metadata = { title: "Portfolio" };
+export const metadata: Metadata = {
+  title: "Portfolio",
+  description:
+    "View Being Lillian's makeup artistry portfolio — bridal, editorial, and event work alongside client testimonials.",
+};
 export const revalidate = 60;
 
 export default async function PortfolioPage() {

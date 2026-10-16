@@ -7,6 +7,10 @@ import { useAdminAuth } from "@/lib/admin-auth";
 type Stats = {
   mode: string;
   leads_total: number;
+  booking_inquiries?: number;
+  product_requests?: number;
+  accounts_total?: number;
+  catalog_total?: number;
   leads_by_status: Record<string, number>;
   leads_by_service: Record<string, number>;
   posts_total: number;
@@ -20,6 +24,20 @@ type Stats = {
     status: string;
     created_at: string;
     phone_number: string;
+  }[];
+  recent_requests?: {
+    id: string;
+    full_name: string;
+    phone_number: string;
+    created_at: string;
+    items: { name: string; quantity: number }[];
+  }[];
+  recent_signins?: {
+    id: string;
+    email: string;
+    full_name: string;
+    last_login_at?: string | null;
+    login_count: number;
   }[];
   activity: { id: string; at: string; kind: string; message: string }[];
 };
@@ -50,83 +68,148 @@ export function AdminMonitor() {
   if (!stats) return <p className="text-sm text-muted">Loading monitor…</p>;
 
   const cards = [
-    { label: "Leads", value: stats.leads_total },
-    { label: "Journal posts", value: stats.posts_total },
-    { label: "Gallery items", value: stats.portfolio_total },
-    { label: "Videos", value: stats.portfolio_videos },
+    { label: "Booking enquiries", value: stats.booking_inquiries ?? stats.leads_total },
+    { label: "Product requests", value: stats.product_requests ?? 0 },
+    { label: "Accounts", value: stats.accounts_total ?? 0 },
+    { label: "Catalog items", value: stats.catalog_total ?? 0 },
   ];
 
   return (
-    <div className="space-y-10">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
+    <div className="space-y-12">
+      {/* ── Header ── */}
+      <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <p className="text-[11px] uppercase tracking-[2px] text-muted mb-1">Account monitor</p>
+          <p className="text-[10px] uppercase tracking-[2px] text-gold mb-2">Monitor</p>
           <h2 className="font-display text-3xl">Overview</h2>
         </div>
         <p className="text-[11px] uppercase tracking-[1.5px] text-muted">
-          Mode · {stats.mode}
+          {stats.mode}
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* ── Stat cards ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
         {cards.map((c) => (
-          <div key={c.label} className="border border-line dark:border-white/10 p-5 bg-surface/30">
-            <p className="text-[11px] uppercase tracking-[1.5px] text-muted">{c.label}</p>
-            <p className="font-display text-4xl mt-2">{c.value}</p>
+          <div
+            key={c.label}
+            className="border border-line bg-elevated/40 p-6 transition-colors hover:border-gold/40"
+          >
+            <p className="text-[10px] uppercase tracking-[2px] text-muted">{c.label}</p>
+            <p className="font-display text-4xl mt-3">{c.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      {/* ── Pipeline & service ── */}
+      <div className="grid md:grid-cols-2 gap-10">
         <section>
-          <h3 className="text-[11px] uppercase tracking-[1.5px] text-muted mb-4">Pipeline</h3>
-          <ul className="space-y-2">
+          <h3 className="text-[10px] uppercase tracking-[2px] text-gold mb-5">Pipeline</h3>
+          <ul className="space-y-0">
             {Object.entries(stats.leads_by_status).map(([status, count]) => (
-              <li key={status} className="flex justify-between text-sm border-b border-line/60 dark:border-white/10 py-2">
+              <li
+                key={status}
+                className="flex justify-between text-sm border-b border-line/50 py-3"
+              >
                 <span>{status}</span>
-                <span className="text-muted">{count}</span>
+                <span className="text-muted tabular-nums">{count}</span>
               </li>
             ))}
             {!Object.keys(stats.leads_by_status).length && (
-              <li className="text-sm text-muted">No leads yet — submit /book to seed the board.</li>
+              <li className="text-sm text-muted py-3">No leads yet.</li>
             )}
           </ul>
         </section>
         <section>
-          <h3 className="text-[11px] uppercase tracking-[1.5px] text-muted mb-4">By service</h3>
-          <ul className="space-y-2">
+          <h3 className="text-[10px] uppercase tracking-[2px] text-gold mb-5">By service</h3>
+          <ul className="space-y-0">
             {Object.entries(stats.leads_by_service).map(([svc, count]) => (
-              <li key={svc} className="flex justify-between text-sm border-b border-line/60 dark:border-white/10 py-2">
+              <li
+                key={svc}
+                className="flex justify-between text-sm border-b border-line/50 py-3"
+              >
                 <span>{svc.replace("_", " ")}</span>
-                <span className="text-muted">{count}</span>
+                <span className="text-muted tabular-nums">{count}</span>
               </li>
             ))}
           </ul>
         </section>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      {/* ── Recent requests & sign-ins ── */}
+      <div className="grid md:grid-cols-2 gap-10">
         <section>
-          <h3 className="text-[11px] uppercase tracking-[1.5px] text-muted mb-4">Recent inquiries</h3>
+          <h3 className="text-[10px] uppercase tracking-[2px] text-gold mb-5">
+            Recent product requests
+          </h3>
+          <ul className="space-y-3">
+            {(stats.recent_requests || []).map((r) => (
+              <li
+                key={r.id}
+                className="border border-line bg-elevated/30 p-4 text-sm"
+              >
+                <p className="font-medium">{r.full_name}</p>
+                <p className="text-[11px] text-muted mt-1.5 leading-relaxed">
+                  {r.items.map((i) => `${i.name} ×${i.quantity}`).join(", ")} ·{" "}
+                  {r.phone_number}
+                </p>
+              </li>
+            ))}
+            {!(stats.recent_requests || []).length && (
+              <li className="text-sm text-muted">No product requests yet.</li>
+            )}
+          </ul>
+        </section>
+        <section>
+          <h3 className="text-[10px] uppercase tracking-[2px] text-gold mb-5">
+            Recent sign-ins
+          </h3>
+          <ul className="space-y-3">
+            {(stats.recent_signins || []).map((a) => (
+              <li
+                key={a.id}
+                className="border border-line bg-elevated/30 p-4 text-sm"
+              >
+                <p className="font-medium">{a.full_name || a.email}</p>
+                <p className="text-[11px] text-muted mt-1.5">
+                  {a.email} · {a.login_count} sign-in{a.login_count === 1 ? "" : "s"}
+                  {a.last_login_at
+                    ? ` · ${a.last_login_at.slice(0, 16).replace("T", " ")}`
+                    : ""}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      {/* ── Booking enquiries & activity ── */}
+      <div className="grid md:grid-cols-2 gap-10">
+        <section>
+          <h3 className="text-[10px] uppercase tracking-[2px] text-gold mb-5">
+            Recent booking enquiries
+          </h3>
           <ul className="space-y-3">
             {stats.recent_leads.map((l) => (
-              <li key={l.id} className="border border-line dark:border-white/10 p-3 text-sm">
+              <li
+                key={l.id}
+                className="border border-line bg-elevated/30 p-4 text-sm"
+              >
                 <p className="font-medium">{l.full_name}</p>
-                <p className="text-[11px] text-muted mt-1">
+                <p className="text-[11px] text-muted mt-1.5">
                   {l.service_type} · {l.status} · {l.phone_number}
                 </p>
               </li>
             ))}
             {!stats.recent_leads.length && (
-              <li className="text-sm text-muted">No recent inquiries.</li>
+              <li className="text-sm text-muted">No recent enquiries.</li>
             )}
           </ul>
         </section>
         <section>
-          <h3 className="text-[11px] uppercase tracking-[1.5px] text-muted mb-4">Activity</h3>
-          <ul className="space-y-3 max-h-[420px] overflow-y-auto">
+          <h3 className="text-[10px] uppercase tracking-[2px] text-gold mb-5">Activity</h3>
+          <ul className="space-y-0 max-h-[420px] overflow-y-auto">
             {stats.activity.map((a) => (
-              <li key={a.id} className="text-sm border-b border-line/50 dark:border-white/10 pb-2">
+              <li key={a.id} className="text-sm border-b border-line/40 py-3">
                 <p className="text-[10px] uppercase tracking-[1px] text-muted">
                   {a.kind} · {a.at.slice(0, 19).replace("T", " ")}
                 </p>
@@ -134,7 +217,9 @@ export function AdminMonitor() {
               </li>
             ))}
             {!stats.activity.length && (
-              <li className="text-sm text-muted">Edits and lead moves will show here.</li>
+              <li className="text-sm text-muted py-3">
+                Edits and lead moves will show here.
+              </li>
             )}
           </ul>
         </section>

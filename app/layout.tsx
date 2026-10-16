@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
 import { WhatsappFab } from "@/components/WhatsappFab";
+import { PublicTour } from "@/components/PublicTour";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className="font-body antialiased min-h-screen flex flex-col bg-paper text-ink">
         <SiteSettingsProvider>
           {children}
+          <PublicTour />
           <SiteFooter />
           <WhatsappFab />
         </SiteSettingsProvider>

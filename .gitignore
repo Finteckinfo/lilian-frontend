@@ -21,3 +21,7 @@ data/
 coverage/
 playwright-report/
 test-results/
+
+# user-uploaded catalog images (seed images ARE committed)
+public/media/catalog/*.png
+public/media/catalog/*.webp
